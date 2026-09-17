@@ -8,10 +8,25 @@ import { json } from '@codemirror/lang-json';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { markdown } from '@codemirror/lang-markdown';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { tags } from '@lezer/highlight';
 
 export type EditorHandle = { replace: (a: string, b: string) => void; navigate: (direction: number) => void };
 type Props = { initial: [string, string]; onChange: (a: string, b: string, chunks: number) => void; wrap: boolean; collapse: boolean; language: string; dark: boolean };
 const languageExtension = (name: string) => ({ TypeScript: javascript({ typescript: true }), JavaScript: javascript(), JSON: json(), CSS: css(), HTML: html(), Markdown: markdown() })[name] ?? [];
+const monokaiHighlight = (dark: boolean) => HighlightStyle.define([
+  { tag: tags.comment, color: dark ? '#88846f' : '#6b6b60', fontStyle: 'italic' },
+  { tag: [tags.keyword, tags.controlKeyword, tags.operatorKeyword, tags.definitionKeyword, tags.modifier, tags.operator], color: dark ? '#f92672' : '#ba1450' },
+  { tag: [tags.string, tags.special(tags.string), tags.regexp], color: dark ? '#e6db74' : '#756000' },
+  { tag: [tags.number, tags.bool, tags.null, tags.atom], color: dark ? '#ae81ff' : '#7043b5' },
+  { tag: [tags.function(tags.variableName), tags.function(tags.propertyName)], color: dark ? '#a6e22e' : '#4f7300' },
+  { tag: [tags.typeName, tags.className, tags.namespace, tags.tagName], color: dark ? '#66d9ef' : '#007b8c' },
+  { tag: [tags.attributeName, tags.propertyName, tags.variableName], color: dark ? '#f8f8f2' : '#272822' },
+  { tag: [tags.punctuation, tags.bracket], color: dark ? '#f8f8f2' : '#272822' },
+  { tag: [tags.meta, tags.processingInstruction], color: dark ? '#fd971f' : '#a65b00' },
+]);
+const monokaiDark = monokaiHighlight(true);
+const monokaiLight = monokaiHighlight(false);
 export const DiffEditor = forwardRef<EditorHandle, Props>(function DiffEditor(props, ref) {
   const container = useRef<HTMLDivElement>(null);
   const merge = useRef<MergeView | null>(null);
@@ -57,7 +72,7 @@ export const DiffEditor = forwardRef<EditorHandle, Props>(function DiffEditor(pr
   useEffect(() => {
     const view = merge.current;
     if (!view) return;
-    for (const [i, editor] of [view.a, view.b].entries()) editor.dispatch({ effects: compartments.current[i].reconfigure([languageExtension(props.language), ...(props.wrap ? [EditorView.lineWrapping] : []), EditorView.theme({}, { dark: props.dark })]) });
+    for (const [i, editor] of [view.a, view.b].entries()) editor.dispatch({ effects: compartments.current[i].reconfigure([languageExtension(props.language), ...(props.wrap ? [EditorView.lineWrapping] : []), EditorView.theme({}, { dark: props.dark }), ...(props.language !== 'Plain text' ? [syntaxHighlighting(props.dark ? monokaiDark : monokaiLight)] : [])]) });
     view.reconfigure({ collapseUnchanged: props.collapse ? { margin: 2, minSize: 3 } : undefined });
   }, [props.wrap, props.collapse, props.language, props.dark]);
   return <div ref={container} className="diff-editor h-full min-h-0 flex-1 overflow-hidden" />;

@@ -13,6 +13,7 @@ function restoreTheme(): Theme {
   try {
     const value = localStorage.getItem('diffchecker-theme');
     if (value === 'system' || value === 'light' || value === 'dark') return value;
+    if (value === 'monokai') return 'dark';
     const previous = JSON.parse(localStorage.getItem('diffchecker-session') || 'null');
     if (previous?.theme === 'light' || previous?.theme === 'dark') return previous.theme;
   } catch { /* Storage may be unavailable. */ }
