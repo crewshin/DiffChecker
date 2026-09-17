@@ -26,10 +26,10 @@
   .diff-editor .cm-lineNumbers .cm-gutterElement { @apply min-w-10 pr-2; }
   .diff-editor .cm-activeLine, .diff-editor .cm-activeLineGutter { @apply bg-slate-100/60 dark:bg-white/[0.025]; }
   .diff-editor .cm-focused { @apply outline-none; }
-  .diff-editor .cm-merge-a .cm-changedLine { @apply bg-[#fff0ed] dark:bg-[#442b2b]; }
-  .diff-editor .cm-merge-b .cm-changedLine { @apply bg-[#eaf8f0] dark:bg-[#203c32]; }
-  .diff-editor .cm-merge-a .cm-changedText { @apply bg-[#ffd5cb] no-underline dark:bg-[#713c37]; background-image: none; }
-  .diff-editor .cm-merge-b .cm-changedText { @apply bg-[#bce9ce] no-underline dark:bg-[#2a6547]; background-image: none; }
+  .diff-editor .cm-merge-a .cm-changedLine { @apply bg-[#ffe2dd] dark:bg-[#603239]; }
+  .diff-editor .cm-merge-b .cm-changedLine { @apply bg-[#dcf7e7] dark:bg-[#235541]; }
+  .diff-editor .cm-merge-a .cm-changedText { @apply bg-[#ffac9c] no-underline dark:bg-[#a64c4d]; background-image: none; }
+  .diff-editor .cm-merge-b .cm-changedText { @apply bg-[#8be2aa] no-underline dark:bg-[#328763]; background-image: none; }
   .diff-editor .cm-selectionBackground { @apply !bg-violet-200/60 dark:!bg-violet-500/30; }
   .diff-editor .cm-cursor { @apply border-violet-500; }
   .diff-editor .cm-foldGutter { @apply text-slate-400; }
