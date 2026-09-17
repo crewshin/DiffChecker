@@ -16,10 +16,10 @@
   .section-label { @apply mb-3 text-[10px] font-semibold uppercase tracking-[0.13em] text-slate-400; }
   .diff-editor .cm-mergeView { @apply h-full bg-white dark:bg-[#1b1e25]; }
   .diff-editor .cm-mergeViewEditors { @apply h-full; }
-  .diff-editor .cm-mergeViewEditor { @apply min-w-0 flex-1; }
+  .diff-editor .cm-mergeViewEditor { @apply h-full min-h-0 min-w-0 flex-1; }
   .diff-editor .cm-mergeViewEditor + .cm-mergeViewEditor { @apply border-l border-slate-200 dark:border-white/10; }
-  .diff-editor .cm-editor { @apply h-full bg-transparent text-slate-700 dark:text-slate-300; }
-  .diff-editor .cm-scroller { @apply overflow-auto font-mono text-[12px] leading-[25px]; }
+  .diff-editor .cm-editor { @apply h-full! min-h-0! bg-transparent text-slate-700 dark:text-slate-300; }
+  .diff-editor .cm-scroller { @apply min-h-0! overflow-auto font-mono text-[12px] leading-[25px]; }
   .diff-editor .cm-content { @apply py-5 caret-violet-500; }
   .diff-editor .cm-line { @apply px-3; }
   .diff-editor .cm-gutters { @apply border-0 bg-transparent py-5 text-[11px] text-slate-300 dark:text-slate-600; }
