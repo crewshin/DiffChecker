@@ -26,10 +26,6 @@
   .diff-editor .cm-lineNumbers .cm-gutterElement { @apply min-w-10 pr-2; }
   .diff-editor .cm-activeLine, .diff-editor .cm-activeLineGutter { @apply bg-slate-100/60 dark:bg-white/[0.025]; }
   .diff-editor .cm-focused { @apply outline-none; }
-  .diff-editor .cm-merge-a .cm-changedLine { @apply bg-[#ffc6bf] dark:bg-[#71343b]; }
-  .diff-editor .cm-merge-b .cm-changedLine { @apply bg-[#bdf3c9] dark:bg-[#1f6044]; }
-  .diff-editor .cm-merge-a .cm-changedText { @apply bg-[#ff8e80] no-underline dark:bg-[#b5444d]; background-image: none; }
-  .diff-editor .cm-merge-b .cm-changedText { @apply bg-[#6ae393] no-underline dark:bg-[#1e9561]; background-image: none; }
   .diff-editor .cm-selectionBackground { @apply !bg-violet-200/60 dark:!bg-violet-500/30; }
   .diff-editor .cm-cursor { @apply border-violet-500; }
   .diff-editor .cm-foldGutter { @apply text-slate-400; }
@@ -37,3 +33,13 @@
   .diff-editor .cm-collapsedLines { @apply cursor-pointer border-y border-slate-100 bg-slate-50 py-2 text-xs text-slate-400 dark:border-white/5 dark:bg-white/5; }
   .diff-editor .cm-panels { @apply border-slate-200 bg-slate-100 text-slate-700 dark:border-white/10 dark:bg-slate-800 dark:text-slate-200; }
 }
+
+/* CodeMirror injects unlayered diff styles, so these overrides must also be unlayered. */
+.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-[#96554d]; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-[#407e4e]; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-[#96554d] no-underline; background-image: none; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-[#407e4e] no-underline; background-image: none; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-[#96554d]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-[#407e4e]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-[#96554d]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-[#407e4e]; }
