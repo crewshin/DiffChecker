@@ -50,15 +50,28 @@ jobs:
           - platform: macos-latest
             target: aarch64-apple-darwin
             args: '--debug --target aarch64-apple-darwin'
+            artifact: diffchecker-macos-arm64
+            bundles: src-tauri/target/aarch64-apple-darwin/debug/bundle/dmg/*.dmg
           - platform: macos-latest
             target: x86_64-apple-darwin
             args: '--debug --target x86_64-apple-darwin'
+            artifact: diffchecker-macos-intel
+            bundles: src-tauri/target/x86_64-apple-darwin/debug/bundle/dmg/*.dmg
           - platform: ubuntu-22.04
             target: ''
             args: '--debug'
+            artifact: diffchecker-linux-x64
+            bundles: |
+              src-tauri/target/debug/bundle/deb/*.deb
+              src-tauri/target/debug/bundle/rpm/*.rpm
+              src-tauri/target/debug/bundle/appimage/*.AppImage
           - platform: windows-latest
             target: ''
             args: '--debug'
+            artifact: diffchecker-windows-x64
+            bundles: |
+              src-tauri/target/debug/bundle/msi/*.msi
+              src-tauri/target/debug/bundle/nsis/*.exe
     runs-on: ${{ matrix.platform }}
     permissions:
       contents: write
@@ -90,23 +103,58 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: node scripts/set-version.mjs "$RELEASE_TAG"
         shell: bash
-      - name: Build and upload desktop installers
-        uses: tauri-apps/tauri-action@action-v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build desktop installers
+        shell: bash
+        run: pnpm tauri build ${{ matrix.args }}
+      - name: Save desktop installers
+        uses: actions/upload-artifact@v4
         with:
-          tagName: ${{ github.ref_name }}
-          releaseDraft: ${{ needs.prepare.outputs.draft }}
-          args: ${{ matrix.args }}
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.bundles }}
+          if-no-files-found: error
+          compression-level: 0
 
   publish:
-    if: needs.prepare.outputs.draft == 'true'
     needs: [prepare, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - name: Gather installers
+        uses: actions/download-artifact@v4
+        with:
+          pattern: diffchecker-*
+          path: release-assets
+          merge-multiple: true
+      - name: Upload installers to GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          shopt -s nullglob
+          assets=(release-assets/*)
+          if (( ${#assets[@]} == 0 )); then
+            echo "No installers were downloaded" >&2
+            exit 1
+          fi
+          for asset in "${assets[@]}"; do
+            uploaded=false
+            for attempt in 1 2 3; do
+              if gh release upload "$RELEASE_TAG" "$asset" --clobber > upload.log 2>&1; then
+                uploaded=true
+                echo "Uploaded $(basename "$asset")"
+                break
+              fi
+              echo "Upload attempt $attempt failed for $(basename "$asset")" >&2
+              head -c 1000 upload.log >&2
+              echo >&2
+              sleep $((attempt * 15))
+            done
+            if [[ "$uploaded" != true ]]; then exit 1; fi
+          done
       - name: Publish complete release
+        if: needs.prepare.outputs.draft == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}

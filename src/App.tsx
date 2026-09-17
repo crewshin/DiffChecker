@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeftRight, ArrowUp, Braces, Check, Columns2, Copy, Download, FileCode2, FilePlus2, FolderOpen, GitCompareArrows, Keyboard, Minus, Monitor, Moon, Plus, RotateCcw, Settings2, ShieldCheck, Sun, WrapText, X } from 'lucide-react';
 import { createTwoFilesPatch, diffLines } from 'diff';
 import { isTauri } from '@tauri-apps/api/core';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { DiffEditor, type EditorHandle } from './components/DiffEditor';
 import { original, modified } from './sample';
 import { version as appVersion } from '../package.json';
@@ -41,7 +42,25 @@ function App() {
     if (!changes) return null;
     return changes.reduce((sum, c) => ({ removed: sum.removed + (c.removed ? c.count || 0 : 0), added: sum.added + (c.added ? c.count || 0 : 0) }), { removed: 0, added: 0 });
   }, [texts]);
-  useEffect(() => { const query = matchMedia('(prefers-color-scheme: dark)'); const listener = () => setSystemDark(query.matches); query.addEventListener('change', listener); return () => query.removeEventListener('change', listener); }, []);
+  useEffect(() => {
+    if (isTauri()) {
+      const window = getCurrentWindow();
+      let disposed = false;
+      let unlisten: (() => void) | undefined;
+      void window.onThemeChanged(({ payload }) => setSystemDark(payload === 'dark')).then(stop => {
+        if (disposed) stop();
+        else unlisten = stop;
+      }).catch(() => {});
+      void window.theme().then(value => {
+        if (!disposed && value) setSystemDark(value === 'dark');
+      }).catch(() => {});
+      return () => { disposed = true; unlisten?.(); };
+    }
+    const query = matchMedia('(prefers-color-scheme: dark)');
+    const listener = () => setSystemDark(query.matches);
+    query.addEventListener('change', listener);
+    return () => query.removeEventListener('change', listener);
+  }, []);
   useEffect(() => { document.documentElement.classList.toggle('dark', dark); document.documentElement.style.colorScheme = dark ? 'dark' : 'light'; }, [dark]);
   useEffect(() => { try { localStorage.setItem('diffchecker-theme', theme); } catch { /* Storage may be unavailable. */ } }, [theme]);
   useEffect(() => { if (!toast) return; const id = setTimeout(() => setToast(''), 4000); return () => clearTimeout(id); }, [toast]);

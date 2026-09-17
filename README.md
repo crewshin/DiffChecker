@@ -19,7 +19,7 @@ File import is limited to text files under 2 MB to keep editing responsive.
 
 ## Releases
 
-A pushed version tag is the source of truth for releases. The workflow in `.github/workflows/release.yml` checks the tag, updates `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, and `src-tauri/Cargo.lock` in each CI checkout, then builds debug installers for macOS (Apple Silicon and Intel), Windows, and Linux. It creates a draft GitHub Release first and publishes it only when all builds succeed. Tags can be `v0.1.0`, `v0.2.0`, `v0.3.0`, or the same numbers without the `v` prefix.
+A pushed version tag is the source of truth for releases. The workflow in `.github/workflows/release.yml` checks the tag, updates `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, and `src-tauri/Cargo.lock` in each CI checkout, then builds debug installers for macOS (Apple Silicon and Intel), Windows, and Linux. Each build stores its installers as workflow artifacts. A final job uploads them to a draft GitHub Release one at a time, retries temporary upload failures, and publishes the release only when every upload succeeds. Tags can be `v0.1.0`, `v0.2.0`, `v0.3.0`, or the same numbers without the `v` prefix.
 
 After the repository is on GitHub and this workflow is on the default branch, create a release with:
 
