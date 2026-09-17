@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+@layer base {
+  body { @apply m-0 bg-[#f6f7f9] text-slate-700 antialiased dark:bg-[#15171c] dark:text-slate-300; }
+  button, select { @apply cursor-pointer; }
+  button:disabled { @apply cursor-not-allowed opacity-40; }
+  button, select, input { @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500; }
+}
+@layer components {
+  .tool-button { @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200/60 dark:text-slate-300 dark:hover:bg-white/5; }
+  .select-input { @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-600 dark:border-white/10 dark:bg-[#23262e] dark:text-slate-300; }
+  .section-label { @apply mb-3 text-[10px] font-semibold uppercase tracking-[0.13em] text-slate-400; }
+  .diff-editor .cm-mergeView { @apply h-full bg-white dark:bg-[#1b1e25]; }
+  .diff-editor .cm-mergeViewEditors { @apply h-full; }
+  .diff-editor .cm-mergeViewEditor { @apply min-w-0 flex-1; }
+  .diff-editor .cm-mergeViewEditor + .cm-mergeViewEditor { @apply border-l border-slate-200 dark:border-white/10; }
+  .diff-editor .cm-editor { @apply h-full bg-transparent text-slate-700 dark:text-slate-300; }
+  .diff-editor .cm-scroller { @apply overflow-auto font-mono text-[12px] leading-[25px]; }
+  .diff-editor .cm-content { @apply py-5 caret-violet-500; }
+  .diff-editor .cm-line { @apply px-3; }
+  .diff-editor .cm-gutters { @apply border-0 bg-transparent py-5 text-[11px] text-slate-300 dark:text-slate-600; }
+  .diff-editor .cm-lineNumbers .cm-gutterElement { @apply min-w-10 pr-2; }
+  .diff-editor .cm-activeLine, .diff-editor .cm-activeLineGutter { @apply bg-slate-100/60 dark:bg-white/[0.025]; }
+  .diff-editor .cm-focused { @apply outline-none; }
+  .diff-editor .cm-merge-a .cm-changedLine { @apply bg-[#fff0ed] dark:bg-[#442b2b]; }
+  .diff-editor .cm-merge-b .cm-changedLine { @apply bg-[#eaf8f0] dark:bg-[#203c32]; }
+  .diff-editor .cm-merge-a .cm-changedText { @apply bg-[#ffd5cb] no-underline dark:bg-[#713c37]; background-image: none; }
+  .diff-editor .cm-merge-b .cm-changedText { @apply bg-[#bce9ce] no-underline dark:bg-[#2a6547]; background-image: none; }
+  .diff-editor .cm-selectionBackground { @apply !bg-violet-200/60 dark:!bg-violet-500/30; }
+  .diff-editor .cm-cursor { @apply border-violet-500; }
+  .diff-editor .cm-foldGutter { @apply text-slate-400; }
+  .diff-editor .cm-placeholder { @apply text-slate-400; }
+  .diff-editor .cm-collapsedLines { @apply cursor-pointer border-y border-slate-100 bg-slate-50 py-2 text-xs text-slate-400 dark:border-white/5 dark:bg-white/5; }
+  .diff-editor .cm-panels { @apply border-slate-200 bg-slate-100 text-slate-700 dark:border-white/10 dark:bg-slate-800 dark:text-slate-200; }
+}
