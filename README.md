@@ -13,6 +13,6 @@ Install dependencies with `pnpm install`, then launch the desktop app with `pnpm
 - Syntax highlighting for TypeScript, JavaScript, JSON, HTML, CSS, and Markdown.
 - Export a unified `.patch` file. Desktop export uses a native save dialog.
 - Light, dark, and system themes. The system theme is the default.
-- Restore the latest comparison from local app storage on relaunch. Text never needs a server.
+- Start with empty editors on every launch. Text never needs a server; export a patch to keep a copy.
 
 File import is limited to text files under 2 MB to keep editing responsive.
