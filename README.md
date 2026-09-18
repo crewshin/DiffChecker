@@ -1,5 +1,7 @@
 # DiffChecker
 
+![](https://github.com/crewshin/DiffChecker/blob/e3f423cf5dc8a50f98c83b005ab028f1e0ecec57/DiffChecker.png)
+
 Compare two pieces of text side by side on your desktop. Paste the original on the left and the modified version on the right to see changed lines and words immediately.
 
 ## Your text stays private
