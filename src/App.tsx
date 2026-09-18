@@ -3,12 +3,14 @@ import { ArrowDown, ArrowLeftRight, ArrowUp, Braces, Check, Columns2, Copy, Down
 import { createTwoFilesPatch, diffLines } from 'diff';
 import { isTauri } from '@tauri-apps/api/core';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { DiffEditor, type EditorHandle } from './components/DiffEditor';
 import { original, modified } from './sample';
 import { version as appVersion } from '../package.json';
 import './App.css';
 
 type Theme = 'system' | 'light' | 'dark';
+const projectUrl = 'https://github.com/crewshin/DiffChecker';
 function restoreTheme(): Theme {
   try {
     const value = localStorage.getItem('diffchecker-theme');
@@ -124,7 +126,7 @@ function App() {
         <div className="flex h-11 shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50/60 px-4 dark:border-white/10 dark:bg-white/[0.015]"><span className="flex items-center gap-2 text-[10px] text-slate-400"><Braces size={13} />{language}<span className="mx-1 text-slate-300 dark:text-slate-600">/</span>UTF-8</span><div className="flex items-center gap-2"><span className="mr-1 text-[10px] text-slate-400">{chunks ? `${chunks} changed ${chunks === 1 ? 'section' : 'sections'}` : texts[0] || texts[1] ? 'Texts are identical' : 'Ready to compare'}</span><button disabled={!chunks} aria-label="Previous change" title="Previous change" className="tool-button !p-1.5" onClick={() => editor.current?.navigate(-1)}><ArrowUp size={13} /></button><button disabled={!chunks} aria-label="Next change" title="Next change" className="tool-button !p-1.5" onClick={() => editor.current?.navigate(1)}><ArrowDown size={13} /></button></div></div>
       </section>
     </main>
-    <footer className="flex h-8 shrink-0 items-center justify-between border-t border-slate-200/70 px-6 text-[10px] text-slate-400 dark:border-white/[0.07]"><span className="flex items-center gap-1.5"><span className="h-1 w-1 rounded-full bg-emerald-500" />Private on this device</span><span className="flex items-center gap-1.5"><Keyboard size={12} />⌘ / Ctrl + F to find<span className="mx-2 opacity-40">|</span>DiffChecker v{appVersion}</span></footer>
+    <footer className="flex h-8 shrink-0 items-center justify-between border-t border-slate-200/70 px-6 text-[10px] text-slate-400 dark:border-white/[0.07]"><span className="flex items-center gap-1.5"><span className="h-1 w-1 rounded-full bg-emerald-500" />Private on this device</span><span className="flex items-center gap-1.5"><Keyboard size={12} />⌘ / Ctrl + F to find<span className="mx-2 opacity-40">|</span><a href={projectUrl} target="_blank" rel="noopener noreferrer" title="View DiffChecker on GitHub" className="rounded-sm hover:text-violet-600 hover:underline dark:hover:text-violet-300" onClick={event => { if (!isTauri()) return; event.preventDefault(); void openUrl(projectUrl).catch(() => setToast('Could not open project page')); }}>DiffChecker v{appVersion}</a></span></footer>
     <input ref={file} type="file" className="hidden" aria-label="Import text file" onChange={e => { void loadFile(e.target.files?.[0]); e.target.value = ''; }} />
     {toast && <div role="status" className="fixed bottom-12 left-1/2 z-50 flex max-w-lg -translate-x-1/2 items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 text-xs shadow-lg dark:border-white/10 dark:bg-slate-800">{toast}<button aria-label="Dismiss notification" onClick={() => setToast('')}><X size={14} /></button></div>}
     {confirmClear && <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/30 backdrop-blur-sm"><div role="dialog" aria-modal="true" aria-labelledby="new-title" className="w-80 rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-[#23262e]"><h2 id="new-title" className="text-base font-semibold">Start a new comparison?</h2><p className="mt-2 text-xs leading-relaxed text-slate-400">Both editors will be cleared. You can undo in each editor to recover your text.</p><div className="mt-6 flex justify-end gap-2"><button autoFocus className="tool-button" onClick={() => setConfirmClear(false)}>Cancel</button><button className="tool-button !bg-violet-600 !text-white" onClick={() => { replace('', ''); setNames(['original.txt', 'modified.txt']); setConfirmClear(false); }}>New comparison</button></div></div></div>}

@@ -1,33 +1,34 @@
 # DiffChecker
 
-A local desktop app for comparing two pieces of text side by side. Built with React, CodeMirror, Tailwind CSS, and Tauri 2.
+Compare two pieces of text side by side on your desktop. Paste the original on the left and the modified version on the right to see changed lines and words immediately.
 
-## Run
+## Your text stays private
 
-Install dependencies with `pnpm install`, then launch the desktop app with `pnpm tauri dev`. To run just the web interface for development, use `pnpm dev`. Build the web interface with `pnpm build` or package the desktop app with `pnpm tauri build`.
+Unlike web based diff tools, this one keeps all data private. The text you paste or open is not uploaded to a server or sent to a comparison service. No account is needed. No analytics. No network calls. Nothing. Simple, free, open source tool.
 
-## Features
+The editors start blank each time you launch the app, and comparison text is not saved automatically. If you want to keep a record, you can choose to export a patch file to your computer.
 
-- Edit or paste text on either side and see line and inline changes immediately.
-- Open text files into either editor, swap sides, navigate changes, wrap lines, and collapse unchanged content.
-- Syntax highlighting for TypeScript, JavaScript, JSON, HTML, CSS, and Markdown.
-- Export a unified `.patch` file. Desktop export uses a native save dialog.
-- Light, dark, and system themes. The system theme is the default.
-- Start with empty editors on every launch. Text never needs a server; export a patch to keep a copy.
+## Download
 
-File import is limited to text files under 2 MB to keep editing responsive.
+Get the [latest release](https://github.com/crewshin/DiffChecker/releases/latest), or browse [all releases](https://github.com/crewshin/DiffChecker/releases).
 
-## Releases
+Choose the download for your computer:
 
-A pushed version tag is the source of truth for releases. The workflow in `.github/workflows/release.yml` checks the tag, updates `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, and `src-tauri/Cargo.lock` in each CI checkout, then builds debug installers for macOS (Apple Silicon and Intel), Windows, and Linux. Each build stores its installers as workflow artifacts. A final job uploads them to a draft GitHub Release one at a time, retries temporary upload failures, and publishes the release only when every upload succeeds. Tags can be `v0.1.0`, `v0.2.0`, `v0.3.0`, or the same numbers without the `v` prefix.
+| System | Download format |
+| --- | --- |
+| macOS | `.dmg` for Apple Silicon or Intel |
+| Windows | `.exe` or `.msi` |
+| Linux | `.AppImage`, `.deb`, or `.rpm` |
 
-After the repository is on GitHub and this workflow is on the default branch, create a release with:
+Current releases are unsigned development builds. On MacOS, you might need to run `xattr -cr /Applications/DiffChecker.app` to get it to launch.
 
-```sh
-git tag v0.2.0
-git push origin v0.2.0
-```
+## What you can do
 
-Use `node scripts/set-version.mjs v0.2.0` if you want to update the checked-in version fields before committing and tagging. CI applies the tag version automatically even when those fields still show an older development version. To check a tag without editing files, add `--check`.
+- Paste or edit text in either pane and see line and word changes as you type.
+- Open a local text file into either pane, or swap the two sides.
+- Jump between changes, wrap long lines, or hide unchanged lines.
+- Highlight TypeScript, JavaScript, JSON, HTML, CSS, and Markdown syntax.
+- Export the comparison as a unified `.patch` file.
+- Use light mode, dark mode, or the system theme.
 
-The GitHub Actions job uses the repository's built-in `GITHUB_TOKEN`; no release token needs to be added. The builds have no signing configuration.
+Text file imports are limited to files up to 2 MB to keep editing responsive.
