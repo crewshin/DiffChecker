@@ -35,11 +35,13 @@
 }
 
 /* CodeMirror injects unlayered diff styles, so these overrides must also be unlayered. */
-.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-[#96554d]; }
-.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-[#407e4e]; }
-.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-[#96554d] no-underline; background-image: none; }
-.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-[#407e4e] no-underline; background-image: none; }
-.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-[#96554d]; }
-.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-[#407e4e]; }
-.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-[#96554d]; }
-.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-[#407e4e]; }
+/* Keep line context subtle so the exact changed words and characters stand out. */
+.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-red-50; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-green-50; }
+.diff-editor .cm-mergeView .cm-editor .cm-changedText { @apply rounded-xs no-underline; background-image: none; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-red-200; }
+.diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-green-200; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedLine { @apply bg-[#342429]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedLine { @apply bg-[#20312b]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-a .cm-changedText { @apply bg-[#7f3838]; }
+.dark .diff-editor .cm-mergeView .cm-editor.cm-merge-b .cm-changedText { @apply bg-[#256340]; }
